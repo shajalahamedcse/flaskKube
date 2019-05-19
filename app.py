@@ -31,8 +31,8 @@ def init():
     try:
        db = MySQLdb.connect("mysql","root","rootpass")
        cursor = db.cursor()
-       cursor.execute("DROP DATABASE IF EXISTS STUDENT")
-       cursor.execute("CREATE DATABASE STUDENT")
+       cursor.execute("DROP DATABASE IF EXISTS STUDENTDB")
+       cursor.execute("CREATE DATABASE STUDENTDB")
        cursor.execute("USE STUDENT")
        sql = """CREATE TABLE students (
              ID int,
@@ -41,6 +41,21 @@ def init():
        cursor.execute(sql)
        db.commit()
        return "DB Init done"
+    except (MySQLdb.Error, MySQLdb.Warning) as e:
+       return "MySQL Error: %s" % str(e)
+
+
+@app.route("/students/add", methods=['POST'])
+def add_courses():
+
+    try:
+       db = MySQLdb.connect("mysql","root","rootpass")
+       cursor = db.cursor()
+       cursor.execute("USE STUDENTDB")
+       req_json = request.get_json()
+       cursor.execute("INSERT INTO students (ID, STUDENT) VALUES (%s,%s)", (req_json['uid'], req_json['student']))
+       db.commit()
+       return Response("Added\n\n", status=200, mimetype='application/json')
     except (MySQLdb.Error, MySQLdb.Warning) as e:
        return "MySQL Error: %s" % str(e)
 

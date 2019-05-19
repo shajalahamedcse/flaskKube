@@ -1,0 +1,26 @@
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: demo
+    name: web
+  name: web1
+spec:
+  containers:
+    - image: redis:latest
+      name: redis
+      ports:
+        - containerPort: 6379
+          name: redis
+          protocol: TCP
+    - image: shajalahamedcse/flask-kubernetes:v0.0.1
+      name: python
+      env:
+        - name: REDIS_HOST
+          value: localhost
+      ports:
+        - containerPort: 5000
+          name: http
+          protocol: TCP
