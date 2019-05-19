@@ -25,6 +25,25 @@ def healthz():
     return Response("Healthy", status=200, mimetype='application/json')
 
 
+
+@app.route('/init')
+def init():
+    try:
+       db = MySQLdb.connect("mysql","root","rootpass")
+       cursor = db.cursor()
+       cursor.execute("DROP DATABASE IF EXISTS STUDENT")
+       cursor.execute("CREATE DATABASE STUDENT")
+       cursor.execute("USE STUDENT")
+       sql = """CREATE TABLE students (
+             ID int,
+             STUDENT char(30)
+       )"""
+       cursor.execute(sql)
+       db.commit()
+       return "DB Init done"
+    except (MySQLdb.Error, MySQLdb.Warning) as e:
+       return "MySQL Error: %s" % str(e)
+
 #Server
 
 if __name__ == "__main__":

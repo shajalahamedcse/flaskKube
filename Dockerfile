@@ -1,6 +1,3 @@
-FROM python:2.7
-ADD . /code
-WORKDIR /code
-RUN pip install -r requirements.txt
-
-CMD ["python", "app.py"]
+FROM python:2.7-onbuild
+EXPOSE 5000
+CMD [ "python", "app.py" ]
